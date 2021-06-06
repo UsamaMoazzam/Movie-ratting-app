@@ -19,21 +19,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class moviedetails extends AppCompatActivity {
-
-
     String data1,data2,data3,data4,data5,data6,data7;
     String imageid;
-    boolean click=false;
     show shows=new show("","","","","","","","");
     Parcelable  fav;
     Button b1,b2,b3,b4;
-    DatabaseReference reference;
-    DatabaseReference reference1;
     TextView tx1,tx2,tx3,tx4,tx5,tx6,tx7;
     ImageView imageViewe;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_moviedetails);
         tx1=findViewById(R.id.editText);
         tx2=findViewById(R.id.editText2);
@@ -45,27 +39,26 @@ public class moviedetails extends AppCompatActivity {
         imageViewe=findViewById(R.id.imageView2);
         getData();
         setData();
-
+        final DatabaseReference reference;
+        final DatabaseReference reference1;
         reference=FirebaseDatabase.getInstance().getReference().child("Favourite");
         reference1=FirebaseDatabase.getInstance().getReference().child("Recently Watched");
         b1=findViewById(R.id.id1);
         b2=findViewById(R.id.id2);
         b3=findViewById(R.id.id3);
         b4=findViewById(R.id.id4);
+
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 reference1.push().setValue(shows);
-                Toast.makeText(moviedetails.this,""+"Added in RECENTLY watched",Toast.LENGTH_SHORT).show();
-            }
-        });
-
+                Toast.makeText(moviedetails.this,""+"Added in Recently Watched",Toast.LENGTH_SHORT).show();
+            }});
         b2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseReference myRef2 = FirebaseDatabase.getInstance().getReference().child("Recently Watched");
-                myRef2.addValueEventListener(new ValueEventListener() {
-                    boolean b1=false;
+                DatabaseReference myRef1 = FirebaseDatabase.getInstance().getReference().child("Recently Watched");
+                myRef1.addValueEventListener(new ValueEventListener() {
                     String key=null;
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
@@ -76,7 +69,7 @@ public class moviedetails extends AppCompatActivity {
                             if(name.compareTo(data1)==0)
                             {
                                 key =dataSnapshot1.getKey();
-                           }
+                            }
                         }
                         if(key!=null)
                         {   DatabaseReference myRef1= FirebaseDatabase.getInstance().getReference().child("Recently Watched").child(key);
@@ -86,40 +79,48 @@ public class moviedetails extends AppCompatActivity {
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(moviedetails.this,""+"Database Error",Toast.LENGTH_SHORT).show();
+                    }}
 
-                    }}); }
+
+                    ); }
         });
        b3.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
                reference.push().setValue(shows);
                Toast.makeText(moviedetails.this,""+"Added in favourites",Toast.LENGTH_SHORT).show();
-
-           }
-       });
-
+           }});
         b4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseReference myRef1 = FirebaseDatabase.getInstance().getReference().child("Favourites");
+                DatabaseReference myRef1 = FirebaseDatabase.getInstance().getReference().child("Favourite");
                 myRef1.addValueEventListener(new ValueEventListener() {
-                    String key1=null;;
+                    String key=null;
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot dataSnapshot2 : dataSnapshot.getChildren()) {
+                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                             GenericTypeIndicator<HashMap<String, String>> objectsGTypeInd = new GenericTypeIndicator<HashMap<String, String>>() {};
-                            Map<String, String> objectHashMap = dataSnapshot2.getValue(objectsGTypeInd);
+                            Map<String, String> objectHashMap = dataSnapshot1.getValue(objectsGTypeInd);
                             ArrayList<String> objectArrayList = new ArrayList<String>(objectHashMap.values());
                             String name=objectArrayList.get(4);
                             if(name.compareTo(data1)==0)
-                            { key1 =dataSnapshot2.getKey(); }
-                            if(key1!=null)
-                            { DatabaseReference myRef4= FirebaseDatabase.getInstance().getReference().child("Favourites").child(key1);
-                                myRef4.removeValue();
-                                Toast.makeText(moviedetails.this,""+"Removed from Favourites",Toast.LENGTH_SHORT).show();
-                            } } }public void onCancelled(@NonNull DatabaseError databaseError) { }}); }
-        }); }
-    private void getData()
-    {
+                            {
+                                key =dataSnapshot1.getKey();
+                            }
+                        }
+                        if(key!=null)
+                        {   DatabaseReference myRef1= FirebaseDatabase.getInstance().getReference().child("Favourite").child(key);
+                            myRef1.removeValue();
+                            Toast.makeText(moviedetails.this,""+"Removed in  Favourite",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(moviedetails.this,""+"Database Error",Toast.LENGTH_SHORT).show();
+                    }}); }
+        });
+ }
+    private void getData() {
         if(getIntent().hasExtra("moviename") && getIntent().hasExtra("movierating")&&getIntent().hasExtra("moviegenre")&&getIntent().hasExtra("moviedescription")&& getIntent().hasExtra("movieimg"))
         {
 
@@ -136,8 +137,7 @@ public class moviedetails extends AppCompatActivity {
         else
             Toast.makeText(this,"no data",Toast.LENGTH_SHORT).show();
     }
-    private void setData()
-    {
+    private void setData() {
         tx1.setText(data1);
         tx2.setText(data2);
         tx3.setText(data3);
@@ -147,5 +147,4 @@ public class moviedetails extends AppCompatActivity {
         tx7.setText(data7);
         Picasso.with(this).load(imageid).into(imageViewe);
     }
-
 }

@@ -56,17 +56,13 @@ return new ViewHolder(view);
                 intent.putExtra("movierating", moviez.getRating());
                 intent.putExtra("moviegenre", moviez.getGenre());
                 intent.putExtra("moviedescription", moviez.getDescription());
-                intent.putExtra("movieimg", moviez.getImg());
+                intent.putExtra("movieimg", moviez.getImg())                   ;
                 intent.putExtra("moviedate",moviez.getDate());
                 intent.putExtra("movietime",moviez.getTime());
                 context.startActivity(intent);
             }
         });
     }
-
-
-
-
     @Override
     public int getItemCount() {
         return shows.size();

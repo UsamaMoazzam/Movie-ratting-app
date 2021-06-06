@@ -14,7 +14,6 @@ public class show implements Parcelable {
     String img;
     String cast;
 
-
     protected show(Parcel in) {
         name = in.readString();
         img=in.readString();
@@ -108,6 +107,7 @@ public class show implements Parcelable {
     public void setDate(String date) {
         this.date = date;
     }
+
 
     @Override
     public int describeContents() {

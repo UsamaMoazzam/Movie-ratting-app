@@ -13,6 +13,8 @@
 <item
     android:id="@+id/no3"
     android:title="Search"/>
+    <item android:id="@+id/no5"
+          android:title="Genre"/>
     <item
         android:id="@+id/no4"
         android:title="Logout">

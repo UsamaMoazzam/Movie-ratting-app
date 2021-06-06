@@ -1,13 +1,9 @@
 package com.example.project;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,27 +14,27 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.List;
 
-public class Fragment2 extends Fragment {
+public class mystery extends AppCompatActivity {
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view= inflater.inflate(R.layout.fragment2,container,false);
-        RecyclerView recyclerView=view.findViewById(R.id.recycler);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_thriller);
         final ArrayList<show> shows=new ArrayList<>();
         DatabaseReference myRef ;
         Adapter_Movie adapter_movie;
         final ArrayList<show> movies = new ArrayList<>();
-        final ArrayList<show> copy = movies;
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        RecyclerView recyclerView=findViewById(R.id.recthrill);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         final ArrayList<String> l1=new ArrayList<>();
-        final Adapter_Recommended adapter_recommended=new Adapter_Recommended(getContext(),shows);
+        final Adapter_Recommended adapter_recommended=new Adapter_Recommended(this,shows);
         recyclerView.setAdapter(adapter_recommended);
         for(int i=0;i<499;i++) {
             String k=Integer.toString(i);
-             myRef = FirebaseDatabase.getInstance().getReference().child("Data").child(k);
+            myRef = FirebaseDatabase.getInstance().getReference().child("Data").child(k);
             myRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -46,8 +42,20 @@ public class Fragment2 extends Fragment {
                     for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                         l1.add(dataSnapshot1.getValue().toString());
                     }
-                    double k=Double.parseDouble(l1.get(5));
-                    if (k>= 8.5) {
+                    String ele=l1.get(4);
+                    String ke=ele.substring(1,ele.length()-1);
+                    String elements[]=ke.split(",");
+                    boolean found=false;
+                    List<String> fixedLenghtList = Arrays.asList(elements);
+                    ArrayList<String> listOfString = new ArrayList<String>(fixedLenghtList);
+                    for(int i=0;i<listOfString.size();i++)
+                    {
+                        if(listOfString.get(i).toLowerCase().compareTo("mystery")==0)
+                        {
+                            found=true;
+                        }
+                    }
+                    if (found) {
                         if (l1.get(6).length() == 0) {
                             l1.set(6, l1.get(12));
                         }
@@ -80,11 +88,21 @@ public class Fragment2 extends Fragment {
                     }
                     show move = new show(l1.get(14), l1.get(4), l1.get(7), l1.get(19), l1.get(13), l1.get(11),l1.get(8),l1.get(0));
                     if(l1.get(19).compareTo("N/A")!=0){
-                    double k=Double.parseDouble(l1.get(19));
-                    if (k>= 8.5) {
-                        shows.add(move);
-                        adapter_recommended.notifyDataSetChanged();
-                    }}
+                        String elements[]=l1.get(4).split(",");
+                        boolean found=false;
+                        List<String> fixedLenghtList = Arrays.asList(elements);
+                        ArrayList<String> listOfString = new ArrayList<String>(fixedLenghtList);
+                        for(int i=0;i<listOfString.size();i++)
+                        {
+                            if(listOfString.get(i).toLowerCase().compareTo("mystery")==0)
+                            {
+                                found=true;
+                            }
+                        }
+                        if (found) {
+                            shows.add(move);
+                            adapter_recommended.notifyDataSetChanged();
+                        }}
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -92,7 +110,5 @@ public class Fragment2 extends Fragment {
                 }
             });
         }
-        return view;
     }
-
 }

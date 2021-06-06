@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -96,7 +98,23 @@ public class signup extends AppCompatActivity{
                 });
             }
         });
-    }
 
+        Button btn1=findViewById(R.id.button12);
+        ImageButton bt=findViewById(R.id.imagebutton2);
+        btn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in=new Intent(signup.this,login.class);
+                startActivity(in);
+            }
+        });
+        bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in=new Intent(signup.this,login.class);
+                startActivity(in);
+            }
+        });
+    }
 
 }
